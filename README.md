@@ -53,6 +53,8 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
 
 ```bash
 https://www.nerdfonts.com/font-downloads
+
+下载字体文件FiraCodeNerdFont-Regular.ttf下载之后双击ttf文件点击安装即可添加到系统字体文件中
 ```
 
 

@@ -2,9 +2,6 @@
 local map = vim.api.nvim_set_keymap
 local opt = { noremap = true, silent = true }
 
--- 插件需要导出的快捷键设置
--- local pluginKey = {}
-
 -- 设置常用的快捷的前缀 key 为空格
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
