@@ -44,8 +44,9 @@ map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 
 -- git commit history
 map("n", "gh", ":Telescope git_commits<CR>", opt)
+
 -- git status
-map("n", "gits", ":Telescope git_status<CR>", opt)
+-- map("n", "gits", ":Telescope git_status<CR>", opt)
 -- map("n", "<C-;>", ":Telescope project<CR>", opt)
 
 -- git add . and git commit -m ``
