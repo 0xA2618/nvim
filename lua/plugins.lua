@@ -91,6 +91,9 @@ packer.startup({
         use("glepnir/lspsaga.nvim")
 
         use("b0o/schemastore.nvim")
+   
+        use("rust_analyzer")
+
     end,
 
     config = {

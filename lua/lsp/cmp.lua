@@ -14,6 +14,7 @@ cmp.setup({
   },
   mapping = {
     ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<Tab>k'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
   },
 

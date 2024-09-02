@@ -72,6 +72,9 @@ map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR><cmd>cclose<CR>", opt)
 -- 代码格式化
 map("n", "ff", "<cmd>lua vim.lsp.buf.format({ async = true })<CR><cmd>cclose<CR>", opt)
 
+-- 在提示包未引用时使用ctrl+回车补全提示
+map("n", "<C-CR>", "<cmd>lua vim.lsp.buf.code_action()<CR>", opt)
+
 -- 设置快捷键
 map("n", "iw", [[:lua Highlight_word()<CR>]], opt)
 map("n", "iwc", [[:lua Clear_highlight()<CR>]], opt)
