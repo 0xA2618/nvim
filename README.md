@@ -103,3 +103,18 @@ https://www.nerdfonts.com/font-downloads
 
 
 
+### remove
+
+```bash
+apt remove neovim zsh autojump lua5.1 liblua5.1-0-dev luarocks -y 
+
+
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.vim
+rm -rf ~/.local/share/nvim/site/pack/packer
+rm -rf ~/.oh-my-zsh/
+rm ~/.zshrc ~/.zsh_history 
+chsh -s /bin/bash # 将/bin/bash 设置为系统bash
+```
+
