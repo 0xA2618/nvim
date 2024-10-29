@@ -1,16 +1,24 @@
-# nvim 
+# Neovim
 
-
-
-## Install node oh-my-zsh
+## Install oh-my-zsh
 
 ```bash
-# node  
-brew install node 
-
 # oh-my-zsh 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+
+# linux
+apt install autojump rustc golang neovim
+
+# setting goproxy
+echo 'export GOPRIVATE=golang.org,x.tools' >> ~/.zshrc
+echo 'export GOPROXY=https://goproxy.cn,direct' >> ~/.zshrc
+source ~/.zshrc
+
+# gopls
+go install golang.org/x/tools/gopls@latest
+echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.zshrc
+source ~/.zshrc
 ```
 
 
@@ -18,8 +26,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 ## oh-my-zsh setting
 
 ```bash
-export ZSH="$HOME/.oh-my-zsh"
-
+vim .zshrc
 export PATH=/opt/homebrew/bin:$PATH
 export PATH=$PATH:$(go env GOPATH)/bin
 
@@ -31,10 +38,6 @@ plugins=(
      git
      jsontools
 )
-
-# 
-unsetopt inc_append_history
-unsetopt share_history
 ```
 
 
