@@ -6,7 +6,24 @@ end
 
 local highlighted_words = {}
 
+-- 高亮指定字符，并增加不同的背景色
 function Highlight_word()
+    local word = vim.fn.expand("<cword>")
+    if word ~= "" then
+        local fg_color = random_color()  -- 前景色
+        local bg_color = random_color()  -- 背景色
+        local group_name = "WordHighlight" .. word
+
+        -- 创建高亮组，并同时指定前景色和背景色
+        vim.cmd(string.format("highlight %s guifg=%s guibg=%s", group_name, fg_color, bg_color))
+
+        -- 匹配并高亮指定单词
+        local match_id = vim.fn.matchadd(group_name, "\\<" .. word .. "\\>")
+        highlighted_words[word] = { group = group_name, match_id = match_id }
+    end
+end
+
+function Highlight_word_a()
     local word = vim.fn.expand("<cword>")
     if word ~= "" then
         local color = random_color()

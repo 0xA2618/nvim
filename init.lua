@@ -1,5 +1,4 @@
 -- 初始化 packer.nvim 插件管理器
-
 require("plugins")
 
 require("basic")
@@ -41,6 +40,9 @@ require("plugin-config.lualine")
 
 -- 格式化代码
 require("plugin-config.null-ls")
+
+-- rust
+require("plugin-config.bufferline")
 
 -- lsp
 require("plugin-config.lspsaga")
