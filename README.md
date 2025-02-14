@@ -6,6 +6,13 @@
 # oh-my-zsh 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
+or
+
+git clone https://github.com/ohmyzsh/ohmyzsh.git && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+
+
+# macOs
+brew install autojump zsh-syntax-highlighting
 
 # linux
 apt install autojump rustc golang neovim
@@ -56,6 +63,36 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
   ~/.local/share/nvim/site/pack/packer/start/packer.nvim
   
 # nvim && PackerInstall
+```
+
+
+
+### Packer
+
+```lua
+-- You must run this or `PackerSync` whenever you make changes to your plugin configuration
+-- Regenerate compiled loader file
+:PackerSync
+
+-- Remove any disabled or unused plugins
+:PackerClean
+
+-- Clean, then install missing plugins
+:PackerInstall
+
+-- Clean, then update and install plugins
+-- supports the `--preview` flag as an optional first argument to preview updates
+:PackerUpdate
+
+-- Perform `PackerUpdate` and then `PackerCompile`
+-- supports the `--preview` flag as an optional first argument to preview updates
+:PackerSync
+
+-- Show list of installed plugins
+:PackerStatus
+
+-- Loads opt plugin immediately
+:PackerLoad completion-nvim ale
 ```
 
 
