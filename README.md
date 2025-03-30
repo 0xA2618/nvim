@@ -138,6 +138,14 @@ https://www.nerdfonts.com/font-downloads
 # 这个主要是为了在本机上显示时一些符号乱码问题
 ```
 
+### vue plugs
+```bash
+npm install -g @vue/language-server typescript-language-server
+npm install -g typescript-language-server typescript
+npm install -g typescript@latest typescript-language-server@latest
+npm install -g @vue/language-server
+
+```
 
 
 ## use 
