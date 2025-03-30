@@ -37,6 +37,13 @@ map("n", "<Esc>", ":nohlsearch<CR><Esc>", opt)
 -- tree 文件树左侧快捷键设置
 map("n", "tr", ":NvimTreeToggle<CR>", opt)
 
+-- 展示当前文件中所有的方法
+-- map("n", "cf", ":TagbarToggle<CR>", opt)
+map("n", "cf", ":TagbarToggle<CR>:wincmd l<CR>", opt)
+-- map("n", "cf", ":TagbarToggle<CR>:sleep 100m<CR>:wincmd w<CR>", opt)
+-- 调用方法后关闭这个窗口
+-- map("n", "nof", ":TagbarToggle | wincmd p<CR>", opt)
+
 -- 根据文件名查询文件
 map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 -- 根据字符查询在哪些文件中出现过
@@ -70,7 +77,8 @@ map("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opt)
 map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR><cmd>cclose<CR>", opt)
 
 -- 代码格式化
-map("n", "ff", "<cmd>lua vim.lsp.buf.format({ async = true })<CR><cmd>cclose<CR>", opt)
+map("n", "<C-A-l>", "<cmd>lua vim.lsp.buf.format({ async = true })<CR><cmd>cclose<CR>", opt)
+-- map("n", "ff", "<cmd>lua vim.lsp.buf.format({ async = true })<CR><cmd>cclose<CR>", opt)
 
 -- 在提示包未引用时使用ctrl+回车补全提示
 map("n", "<C-CR>", "<cmd>lua vim.lsp.buf.code_action()<CR>", opt)
