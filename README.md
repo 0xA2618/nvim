@@ -26,6 +26,7 @@ source ~/.zshrc
 go install golang.org/x/tools/gopls@latest
 echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> ~/.zshrc
 source ~/.zshrc
+
 ```
 
 
