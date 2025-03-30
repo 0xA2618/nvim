@@ -23,3 +23,11 @@ function GitPush()
   -- 执行 git push 命令
   vim.cmd("!git push")
 end
+
+-- 监听 Tagbar 窗口的回车操作来关闭 Tagbar
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "tagbar",
+    callback = function()
+        vim.api.nvim_buf_set_keymap(0, "n", "<CR>", ":TagbarToggle<CR>", { noremap = true, silent = true })
+    end
+})
