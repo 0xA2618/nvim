@@ -66,6 +66,11 @@ packer.startup({
         use("jose-elias-alvarez/null-ls.nvim")
         use("nvim-lua/plenary.nvim")
 
+        --  Vue 3 支持
+        -- Vue 语法支持
+        use("posva/vim-vue")
+        use("akinsho/toggleterm.nvim")
+
         -- go/python... lsp插件
         use("neovim/nvim-lspconfig")
         use("williamboman/mason.nvim")
@@ -78,12 +83,12 @@ packer.startup({
         use("hrsh7th/nvim-cmp")
         -- 补全源
         use("hrsh7th/vim-vsnip")
-        use("hrsh7th/cmp-nvim-lsp")          -- name = nvim_lsp
-        use("hrsh7th/cmp-buffer")            -- name = buffer
-        use("hrsh7th/cmp-path")              -- name = path
-        use("hrsh7th/cmp-cmdline")           -- name = cmdline
-        use("hrsh7th/cmp-vsnip")             -- 代码片段提示
-        use("f3fora/cmp-spell")              -- 单词拼写
+        use("hrsh7th/cmp-nvim-lsp")                -- name = nvim_lsp
+        use("hrsh7th/cmp-buffer")                  -- name = buffer
+        use("hrsh7th/cmp-path")                    -- name = path
+        use("hrsh7th/cmp-cmdline")                 -- name = cmdline
+        use("hrsh7th/cmp-vsnip")                   -- 代码片段提示
+        use("f3fora/cmp-spell")                    -- 单词拼写
         use("hrsh7th/cmp-nvim-lsp-signature-help") -- 函数签名
 
         -- lspsaga
@@ -91,9 +96,9 @@ packer.startup({
         use("glepnir/lspsaga.nvim")
 
         use("b0o/schemastore.nvim")
-   
-        use("rust_analyzer")
 
+        -- use("rust_analyzer")
+        use("preservim/tagbar") -- 代码文件显示所有方法和结构
     end,
 
     config = {
