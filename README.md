@@ -64,6 +64,12 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim\
   ~/.local/share/nvim/site/pack/packer/start/packer.nvim
   
 # nvim && PackerInstall
+
+# 显示文件内方法 
+use 'preservim/tagbar"' -- 显示文件定义方法
+brew install ctags
+cd ~/.local/share/nvim/site/pack/packer/start
+git clone https://github.com/preservim/tagbar.git
 ```
 
 

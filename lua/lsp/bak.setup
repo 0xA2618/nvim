@@ -1,0 +1,139 @@
+-- =========================
+-- Mason 安装管理
+-- =========================
+require("mason").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        "pyright",      -- Python
+        "gopls",        -- Go
+        "ts_ls",        -- TypeScript / JavaScript
+        "html",         -- HTML
+        "cssls",        -- CSS
+        "jsonls",       -- JSON
+        "yamlls",       -- YAML
+        "lua_ls"        -- Lua
+    }
+})
+
+-- =========================
+-- LSP Capabilities
+-- =========================
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+-- =========================
+-- LSP Server 配置 (使用 vim.lsp.start)
+-- =========================
+local lsp = vim.lsp
+
+local lsp_servers = {
+    pyright = {
+        cmd = { "pyright-langserver", "--stdio" },
+        filetypes = { "python" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "pyproject.toml", "setup.py", "requirements.txt" }, { upward = true })[1]),
+        settings = {},
+    },
+    gopls = {
+        cmd = { "gopls" },
+        filetypes = { "go", "gomod" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "go.mod" }, { upward = true })[1]),
+        settings = {
+            gopls = {
+                analyses = { unusedparams = true },
+                staticcheck = true,
+            },
+        },
+    },
+    ts_ls = {
+        cmd = { "typescript-language-server", "--stdio" },
+        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "package.json", "tsconfig.json" }, { upward = true })[1]),
+        settings = {},
+    },
+    html = {
+        cmd = { "vscode-html-language-server", "--stdio" },
+        filetypes = { "html" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "package.json", ".git" }, { upward = true })[1]),
+        settings = {},
+    },
+    cssls = {
+        cmd = { "vscode-css-language-server", "--stdio" },
+        filetypes = { "css", "scss", "less" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "package.json", ".git" }, { upward = true })[1]),
+        settings = {},
+    },
+    jsonls = {
+        cmd = { "vscode-json-language-server", "--stdio" },
+        filetypes = { "json", "jsonc" },
+        root_dir = vim.fs.dirname(vim.fs.find({ "package.json", ".git" }, { upward = true })[1]),
+        settings = {},
+    },
+    yamlls = {
+        cmd = { "yaml-language-server", "--stdio" },
+        filetypes = { "yaml" },
+        root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
+        settings = {},
+    },
+    lua_ls = {
+        cmd = { "lua-language-server" },
+        filetypes = { "lua" },
+        root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
+        settings = {
+            Lua = {
+                runtime = { version = "LuaJIT" },
+                diagnostics = { globals = { "vim" } },
+                workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                telemetry = { enable = false },
+            },
+        },
+    },
+}
+
+for server, config in pairs(lsp_servers) do
+    lsp.start(vim.tbl_deep_extend("force", {
+        capabilities = capabilities,
+    }, config))
+end
+
+-- =========================
+-- none-ls.nvim 配置
+-- =========================
+local status_ok, null_ls = pcall(require, "none-ls")
+if not status_ok then
+    vim.notify("none-ls not found!", vim.log.levels.ERROR)
+    return
+end
+
+null_ls.setup({
+    debug = true, -- 启用调试以便排查问题
+    sources = {
+        -- Python
+        null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+        null_ls.builtins.diagnostics.flake8,
+
+        -- Go
+        null_ls.builtins.formatting.goimports,
+        null_ls.builtins.formatting.gofmt,
+
+        -- 前端
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.eslint,
+
+        -- Shell
+        null_ls.builtins.formatting.shfmt,
+        null_ls.builtins.diagnostics.shellcheck,
+    },
+    on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = "LspFormatting", buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
+                buffer = bufnr,
+                callback = function()
+                    vim.lsp.buf.format({ bufnr = bufnr, async = false })
+                end,
+            })
+        end
+    end,
+})
+

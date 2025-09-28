@@ -1,45 +1,39 @@
-local status, null_ls = pcall(require, "null-ls")
-if not status then
-    vim.notify("not found null-ls")
-    return
+-- plugin-config/none-ls.lua
+local ok, none_ls = pcall(require, "none-ls")
+if not ok then
+    return -- 静默返回
 end
 
-local formatting = null_ls.builtins.formatting
-
-null_ls.setup({
+none_ls.setup({
     debug = false,
     sources = {
-        formatting.stylua,
-        formatting.buf,
-        formatting.cmake_format,
-        formatting.gofmt,
-        formatting.goimports,
-        formatting.prettier.with({
-            filetypes = {
-                "javascript",
-                "typescript",
-                "css",
-                "html",
-                "scss",
-                "less",
-                "vue",
-            },
-            prefer_local = "node_modules/.bin",
-        }),
-        formatting.shfmt,
-        formatting.yamlfmt,
-        formatting.black,
-        formatting.clang_format.with({
-            filetype = {
-                "c",
-                "cpp",
-            },
-        }),
-        formatting.jq,
-        formatting.rustfmt,
-        formatting.dart_format,
+        -- Python
+        none_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+        none_ls.builtins.diagnostics.flake8,
+
+        -- Go
+        none_ls.builtins.formatting.goimports,
+        none_ls.builtins.formatting.gofmt,
+
+        -- 前端
+        none_ls.builtins.formatting.prettier,
+        none_ls.builtins.diagnostics.eslint,
+
+        -- Shell
+        none_ls.builtins.formatting.shfmt,
+        none_ls.builtins.diagnostics.shellcheck,
     },
-    -- on_attach = function()
-    --     vim.cmd([[ autocmd BufWritePre <buffer> lua vim.lsp.buf.format({ async = true }) ]])
-    -- end,
+    on_attach = function(client, bufnr)
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = "LspFormatting", buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = vim.api.nvim_create_augroup("LspFormatting", {}),
+                buffer = bufnr,
+                callback = function()
+                    vim.lsp.buf.format({ bufnr = bufnr })
+                end,
+            })
+        end
+    end,
+
 })

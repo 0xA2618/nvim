@@ -1,95 +1,102 @@
-local lspconfig = require("lspconfig")
-local null_ls = require("null-ls")
+-- lsp/setup.lua
 
-null_ls.setup({
-  sources = {
-    null_ls.builtins.formatting.black.with({
-      extra_args = { "--fast" },
-    }),
-  },
-})
-
+-- Mason 安装管理
 require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = {
-        "pyright",
-        "gopls",
-        "jsonls",
-        "yamlls",
-        "lua_ls",
-        "bashls",
-        "volar", -- vue3
-        "ts_ls", -- TypeScript LSP
-        "html",
-        "cssls"
-    }, -- 确保这几个 LSP 服务器安装
-})
-
--- 配置 Python LSP (pyright)
-lspconfig.pyright.setup({})
-
--- 设置 Vue 语言服务器
--- Vue 3 LSP (Volar)
-lspconfig.volar.setup({
-    filetypes = { "vue" },
-    root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", ".git"),
-    settings = {
-        volar = {
-            document = {
-                syntax = { enable = true }
-            }
-        }
+        "pyright", "gopls", "ts_ls", "html", "cssls", "jsonls", "yamlls", "lua_ls"
     }
 })
 
--- vue
--- 使用 ts_ls 代替 tsserver
-lspconfig.ts_ls.setup({
-    filetypes = {
-        "typescript",
-        "typescriptreact",
-        "javascriptreact",
-        "vue" },
-    root_dir = lspconfig.util.root_pattern(
-        "package.json",
-        "tsconfig.json",
-        ".git"),
+-- LSP Capabilities
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+
+-- 保留 require("lspconfig")
+local lspconfig = require("lspconfig")
+
+-- Python
+lspconfig.pyright.setup({
+    capabilities = capabilities,
 })
 
--- vue
--- ESLint LSP
-lspconfig.eslint.setup({
-    settings = { format = true },
-})
-
--- 配置 Go LSP (gopls)
+-- Go
 lspconfig.gopls.setup({
+    capabilities = capabilities,
     settings = {
         gopls = {
-            -- 启用静态检查
+            analyses = { unusedparams = true },
             staticcheck = true,
-
-            -- 启用代码格式化功能
-            formatting = {
-                enabled = true, -- 启用格式化
-            },
-
-            -- 启用代码补全功能
-            completion = {
-                enabled = true, -- 启用代码补全
-            }
-        }
-    }
+        },
+    },
 })
 
--- 配置 JSON LSP (jsonls)
-lspconfig.jsonls.setup({})
+-- TypeScript / JavaScript
+lspconfig.ts_ls.setup({
+    capabilities = capabilities,
+})
 
--- 将补全插件连接到 LSP 服务器
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-lspconfig.pyright.setup({ capabilities = capabilities })
-lspconfig.gopls.setup({ capabilities = capabilities })
-lspconfig.jsonls.setup({ capabilities = capabilities })
-lspconfig.yamlls.setup({ capabilities = capabilities })
-lspconfig.lua_ls.setup({ capabilities = capabilities })
-lspconfig.bashls.setup({ capabilities = capabilities })
+-- HTML
+lspconfig.html.setup({
+    capabilities = capabilities,
+})
+
+-- CSS
+lspconfig.cssls.setup({
+    capabilities = capabilities,
+})
+
+-- JSON
+lspconfig.jsonls.setup({
+    capabilities = capabilities,
+})
+
+-- YAML
+lspconfig.yamlls.setup({
+    capabilities = capabilities,
+})
+
+-- Lua (Neovim 配置)
+lspconfig.lua_ls.setup({
+    capabilities = capabilities,
+    settings = {
+        Lua = {
+            runtime = { version = "LuaJIT" },
+            diagnostics = { globals = { "vim" } },
+            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+            telemetry = { enable = false },
+        },
+    },
+})
+
+-- null-ls.nvim 配置
+local status_ok, null_ls = pcall(require, "null-ls")
+if not status_ok then
+    vim.notify("null-ls not found!", vim.log.levels.ERROR)
+    return
+end
+
+null_ls.setup({
+    debug = false,
+    sources = {
+        null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+        null_ls.builtins.diagnostics.flake8,
+        null_ls.builtins.formatting.goimports,
+        null_ls.builtins.formatting.gofmt,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.diagnostics.eslint,
+        null_ls.builtins.formatting.shfmt,
+        null_ls.builtins.diagnostics.shellcheck,
+    },
+    on_attach = function(client)
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = { "*.py", "*.go", "*.js", "*.ts", "*.html", "*.css" },
+                callback = function()
+                    vim.lsp.buf.format({ async = false })
+                end,
+            })
+        end
+    end,
+})
+

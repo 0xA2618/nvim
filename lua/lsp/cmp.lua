@@ -1,91 +1,94 @@
--- 配置 nvim-cmp
-local cmp = require('cmp')
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+local npairs = require("nvim-autopairs")
 local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
--- 插件需要导出的快捷键设置
-local pluginKey = {}
+-- 加载 VSCode 风格 snippets
+require("luasnip.loaders.from_vscode").lazy_load()
 
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      -- require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-    end,
-  },
-  mapping = {
-    ['<Tab>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-    ['<Tab>k'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-  },
-
-  formatting = require("lsp.ui").cmpFormatting,
-  sources = {
-    { name = 'nvim_lsp' },
-    -- { name = "luasnip" },
-  }
-
+-- autopairs 配置
+npairs.setup({
+    check_ts = true,      -- 启用 treesitter 检测括号
+    fast_wrap = {},       -- 快速包裹功能
 })
 
--- 代码补全tab选中后回车可用
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+-- 让 cmp 与 autopairs 协作
+cmp.event:on(
+    "confirm_done",
+    cmp_autopairs.on_confirm_done({ map_char = { tex = "" } })
+)
 
--- 命令行补全的来源和映射方式
--- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-for _, v in pairs({ "/", "?" }) do
-    cmp.setup.cmdline(v, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-            { name = "buffer" },
-        },
+cmp.setup({
+    snippet = {
+        expand = function(args)
+            luasnip.lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert({
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
+
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+    }),
+
+    sources = cmp.config.sources({
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "buffer" },
+        { name = "path" },
+    }),
+
+    formatting = {
+        format = function(entry, vim_item)
+            local icons = {
+                Text = "", Method = "󰆧", Function = "󰊕", Constructor = "",
+                Field = "󰇽", Variable = "󰂡", Class = "󰠱", Interface = "",
+                Module = "", Property = "󰜢", Unit = "", Value = "󰎠",
+                Enum = "", Keyword = "󰌋", Snippet = "", Color = "󰏘",
+                File = "󰈙", Reference = "󰈇", Folder = "󰉋", Constant = "󰏿",
+                Struct = "", Event = "", Operator = "󰆕", TypeParameter = "󰅲",
+            }
+            vim_item.kind = string.format("%s %s", icons[vim_item.kind] or "", vim_item.kind)
+            return vim_item
+        end,
+    },
+})
+
+-- 命令行模式补全
+cmp.setup.cmdline("/", {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+        { name = "buffer" }
+    }
+})
+
+cmp.setup.cmdline(":", {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+        { name = "path" }
+    }, {
+        { name = "cmdline" }
     })
-end
-
-
--- cmp 代码补全
-pluginKey.config = function(config)
-	return {
-		["<D-,>"] = config.mapping({
-			i = config.mapping.abort(),
-			c = config.mapping.close(),
-		}),
-		["<D-.>"] = config.mapping(config.mapping.complete(), { "i", "c" }),
-		["<Down>"] = config.mapping.select_prev_item(),
-		["<Up>"] = config.mapping.select_next_item(),
-		-- 上一个 在一个
-		["<C-p>"] = config.mapping.select_prev_item(),
-		["<C-n>"] = config.mapping.select_next_item(),
-		-- 确定
-		["<CR>"] = config.mapping({
-			i = function(fallback)
-				if config.visible() and config.get_active_entry() then
-					config.confirm({
-						select = true,
-						behavior = config.ConfirmBehavior.Replace,
-					})
-				else
-					fallback() -- If you use vim-endwise, this fallback will behave the same as vim-endwise.
-				end
-			end,
-			s = config.mapping.confirm({ select = true }),
-			c = config.mapping.confirm({
-				select = true,
-				behavior = config.ConfirmBehavior.Replace,
-			}),
-		}),
-
-		-- 如果窗口内容太多，可以滚动
-		["<C-u>"] = config.mapping(config.mapping.scroll_docs(-4), { "i", "c" }),
-		["<C-d>"] = config.mapping(config.mapping.scroll_docs(4), { "i", "c" }),
-		-- tab 选择下一个
-		["<Tab>"] = function(fallback)
-			if config.visible() then
-				config.select_next_item()
-			else
-				fallback()
-			end
-		end,
-	}
-end
-
-return pluginKey
+})
 
