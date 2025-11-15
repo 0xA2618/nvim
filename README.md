@@ -57,7 +57,8 @@ plugins=(
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 # download lua plugs
-git clone https://github.com/0xA2618/nvim.git ~/.config/
+git clone -b nvim.v0.11.4 https://github.com/0xA2618/nvim.git ~/.config/nvim
+# git clone https://github.com/0xA2618/nvim.git ~/.config/
 
 # https://github.com/wbthomason/packer.nvim
 git clone --depth 1 https://github.com/wbthomason/packer.nvim\
