@@ -12,62 +12,39 @@ require("mason-lspconfig").setup({
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
--- 保留 require("lspconfig")
-local lspconfig = require("lspconfig")
-
--- Python
-lspconfig.pyright.setup({
-    capabilities = capabilities,
-})
-
--- Go
-lspconfig.gopls.setup({
-    capabilities = capabilities,
-    settings = {
-        gopls = {
-            analyses = { unusedparams = true },
-            staticcheck = true,
+-- Neovim 0.11+ 推荐使用 vim.lsp.config / vim.lsp.enable
+local server_configs = {
+    pyright = {},
+    gopls = {
+        settings = {
+            gopls = {
+                analyses = { unusedparams = true },
+                staticcheck = true,
+            },
         },
     },
-})
-
--- TypeScript / JavaScript
-lspconfig.ts_ls.setup({
-    capabilities = capabilities,
-})
-
--- HTML
-lspconfig.html.setup({
-    capabilities = capabilities,
-})
-
--- CSS
-lspconfig.cssls.setup({
-    capabilities = capabilities,
-})
-
--- JSON
-lspconfig.jsonls.setup({
-    capabilities = capabilities,
-})
-
--- YAML
-lspconfig.yamlls.setup({
-    capabilities = capabilities,
-})
-
--- Lua (Neovim 配置)
-lspconfig.lua_ls.setup({
-    capabilities = capabilities,
-    settings = {
-        Lua = {
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-            telemetry = { enable = false },
+    ts_ls = {},
+    html = {},
+    cssls = {},
+    jsonls = {},
+    yamlls = {},
+    lua_ls = {
+        settings = {
+            Lua = {
+                runtime = { version = "LuaJIT" },
+                diagnostics = { globals = { "vim" } },
+                workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+                telemetry = { enable = false },
+            },
         },
     },
-})
+}
+
+for server, config in pairs(server_configs) do
+    local merged = vim.tbl_deep_extend("force", { capabilities = capabilities }, config or {})
+    vim.lsp.config(server, merged)
+    vim.lsp.enable(server)
+end
 
 -- null-ls.nvim 配置
 local status_ok, null_ls = pcall(require, "null-ls")
