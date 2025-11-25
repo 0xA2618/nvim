@@ -5,10 +5,10 @@
 ### 方法 1: 一键安装 (推荐)
 ```bash
 # 下载并运行配置脚本
-curl -sSL https://your-repo/linux_colors_setup.sh | bash
+curl -sSL https://github.com/0xa2618/nvim/linux_colors/linux_colors_setup.sh | bash
 
 # 或者手动执行
-wget https://your-repo/linux_colors_setup.sh
+wget https://github.com/0xa2618/nvim/linux_colors/linux_colors_setup.sh
 chmod +x linux_colors_setup.sh
 ./linux_colors_setup.sh
 ```
