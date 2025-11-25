@@ -56,13 +56,19 @@ vim.o.incsearch = true             -- 边输入边搜索
 -- 输入 & 编辑
 -- =========================
 vim.o.mouse = "a"                  -- 启用鼠标
-vim.o.completeopt = "menu,menuone,noselect,noinsert" -- 补全菜单行为
+vim.o.completeopt = "menu,menuone,noselect" -- 补全菜单行为
 
 -- =========================
 -- 性能
 -- =========================
 vim.o.timeoutlen = 500             -- 按键超时时间
 vim.opt.updatetime = 400           -- 空闲触发时间
+
+-- =========================
+-- 禁用 viminfo/shada 文件
+-- =========================
+vim.o.shadafile = "NONE"           -- 禁用 shada 文件（Neovim 版本的 viminfo）
+vim.o.viminfo = ""                 -- 禁用 viminfo 文件
 
 -- =========================
 -- 剪贴板

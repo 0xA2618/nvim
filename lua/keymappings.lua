@@ -7,6 +7,16 @@ local opts = { noremap = true, silent = true }
 local map = vim.api.nvim_set_keymap
 local opt = { noremap = true, silent = true }
 
+-- 设置窗口切换快捷键
+-- 普通模式下使用 Tab+h 切换到左边窗口
+map('n', '<Tab>h', '<C-w>h', opt)
+-- 普通模式下使用 Tab+l 切换到右边窗口
+map('n', '<Tab>l', '<C-w>l', opt)
+-- 普通模式下使用 Tab+j 切换到下面窗口
+map('n', '<Tab>j', '<C-w>j', opt)
+-- 普通模式下使用 Tab+k 切换到上面窗口
+map('n', '<Tab>k', '<C-w>k', opt)
+
 -- 设置 leader 键为空格
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
