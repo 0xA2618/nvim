@@ -18,6 +18,7 @@ vim.o.scrolloff = 4                -- 光标上下留出空间
 vim.o.sidescrolloff = 4            -- 左右留出空间
 vim.wo.cursorline = true           -- 高亮当前行
 vim.o.showtabline = 2              -- 总是显示 tabline
+vim.o.laststatus = 3               -- 全局单行状态栏（消除编辑区与底部终端之间的冗余分割状态栏）
 vim.o.showmode = false             -- 隐藏底部模式提示（配合 lualine）
 vim.wo.signcolumn = "yes"          -- 保留边栏
 vim.wo.colorcolumn = ""            -- 不显示参考线

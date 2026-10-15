@@ -20,15 +20,21 @@ local function sync_all_themes()
         vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "#f3f3f3", fg = "#555555" })
         vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { fg = "#f3f3f3", bg = "#f3f3f3" })
         vim.api.nvim_set_hl(0, "NvimTreeCursorLine", { bg = "#e4e6f1" })
-        vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#e5e5e5", bg = "NONE" })
+        vim.api.nvim_set_hl(0, "BufferLineOffset", { bg = "#f3f3f3", fg = "#333333", bold = true })
+        vim.api.nvim_set_hl(0, "BufferLineFill", { bg = "#f3f3f3" })
+        vim.api.nvim_set_hl(0, "BufferLineBackground", { bg = "#e8e8e8", fg = "#666666" })
+        vim.api.nvim_set_hl(0, "BufferLineBufferSelected", { bg = "#ffffff", fg = "#202020", bold = true })
+        vim.api.nvim_set_hl(0, "BufferLineSeparator", { fg = "#d4d4d4", bg = "#e8e8e8" })
+        vim.api.nvim_set_hl(0, "BufferLineSeparatorSelected", { fg = "#d4d4d4", bg = "#ffffff" })
+        vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#d4d4d4", bg = "NONE" })
         vim.api.nvim_set_hl(0, "LineNr", { fg = "#999999", bg = "#ffffff" })
         vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#007acc", bg = "#f3f3f3", bold = true })
         vim.api.nvim_set_hl(0, "CursorLine", { bg = "#f5f5f5" })
 
-        vim.api.nvim_set_hl(0, "Terminal", { bg = "#f8f9fa", fg = "#202020" })
-        vim.g.terminal_color_background = "#f8f9fa"
+        vim.api.nvim_set_hl(0, "Terminal", { bg = "#ffffff", fg = "#202020" })
+        vim.g.terminal_color_background = "#ffffff"
         vim.g.terminal_color_foreground = "#202020"
-        vim.g.terminal_color_0 = "#f8f9fa"
+        vim.g.terminal_color_0 = "#ffffff"
         vim.g.terminal_color_7 = "#202020"
         vim.g.terminal_color_8 = "#888888"
         vim.g.terminal_color_15 = "#111111"
@@ -42,6 +48,8 @@ local function sync_all_themes()
         local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#282828"
         vim.g.terminal_color_background = term_bg
         vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#3c3836", bg = "NONE" })
+        vim.api.nvim_set_hl(0, "BufferLineOffset", { bg = "#282828", fg = "#a89984", bold = true })
+        vim.api.nvim_set_hl(0, "BufferLineFill", { bg = "#1d2021" })
     end
 
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do

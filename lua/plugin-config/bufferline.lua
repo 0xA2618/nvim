@@ -14,7 +14,7 @@ require("bufferline").setup {
             {
                 filetype = "NvimTree",
                 text = "EXPLORER",
-                highlight = "Directory",
+                highlight = "NvimTreeNormal",
                 text_align = "left",
                 separator = true,
             },
