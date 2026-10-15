@@ -184,20 +184,6 @@ function M.toggle_opencode()
     vim.api.nvim_set_current_win(new_term_win)
     vim.cmd("startinsert")
 end
-    else
-        opencode_buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_win_set_buf(new_term_win, opencode_buf)
-        local opencode_cmd = find_opencode_cmd()
-        vim.fn.termopen(opencode_cmd)
-        vim.bo[opencode_buf].buflisted = false
-    end
-
-    local tree_win = find_tree_win()
-    adjust_sizes(tree_win, new_term_win)
-
-    vim.api.nvim_set_current_win(new_term_win)
-    vim.cmd("startinsert")
-end
 
 function M.smart_close_buffer()
     local cur_win = vim.api.nvim_get_current_win()
