@@ -2,22 +2,18 @@
 
 local lspconfig = require("lspconfig")
 
--- Mason 安装管理
 require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = {
-        "pyright", "gopls", "tsserver", "html", "cssls", "jsonls", "yamlls", "lua_ls"
+        "pyright", "gopls", "ts_ls", "html", "cssls", "jsonls", "yamlls", "lua_ls"
     },
     automatic_installation = true,
 })
 
--- LSP Capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
--- 通用 on_attach 函数
 local on_attach = function(client, bufnr)
-    -- 启用 LSP 键位映射
     local opts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -38,7 +34,6 @@ local on_attach = function(client, bufnr)
     end, opts)
 end
 
--- 配置各个 LSP 服务器
 local servers = {
     pyright = {},
     gopls = {
@@ -49,7 +44,7 @@ local servers = {
             },
         },
     },
-    tsserver = {},
+    ts_ls = {},
     html = {},
     cssls = {},
     jsonls = {},
@@ -66,43 +61,17 @@ local servers = {
     },
 }
 
--- 设置所有 LSP 服务器
 for server, config in pairs(servers) do
     local merged = vim.tbl_deep_extend("force", {
         capabilities = capabilities,
         on_attach = on_attach,
     }, config or {})
-    lspconfig[server].setup(merged)
+    if vim.lsp and vim.lsp.config and vim.lsp.enable then
+        vim.lsp.config[server] = merged
+        vim.lsp.enable(server)
+    else
+        lspconfig[server].setup(merged)
+    end
 end
 
--- null-ls.nvim 配置
-local status_ok, null_ls = pcall(require, "null-ls")
-if not status_ok then
-    vim.notify("null-ls not found!", vim.log.levels.ERROR)
-    return
-end
-
-null_ls.setup({
-    debug = false,
-    sources = {
-        null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
-        null_ls.builtins.diagnostics.flake8,
-        null_ls.builtins.formatting.goimports,
-        null_ls.builtins.formatting.gofmt,
-        null_ls.builtins.formatting.prettier,
-        null_ls.builtins.diagnostics.eslint,
-        null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.diagnostics.shellcheck,
-    },
-    on_attach = function(client)
-        if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = { "*.py", "*.go", "*.js", "*.ts", "*.html", "*.css" },
-                callback = function()
-                    vim.lsp.buf.format({ async = false })
-                end,
-            })
-        end
-    end,
-})
 

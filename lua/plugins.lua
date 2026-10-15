@@ -20,16 +20,6 @@ return require('packer').startup(function(use)
     use 'neovim/nvim-lspconfig'
     use 'williamboman/mason.nvim'
     use 'williamboman/mason-lspconfig.nvim'
-    use 'preservim/tagbar"' -- 显示文件定义方法
-    use 'nvim-lua/plenary.nvim'
-    use {
-        "nvimtools/none-ls.nvim",
-        -- requires = { "nvim-lua/plenary.nvim" },
-        -- config = function()
-        --     require("plugin-config.null-ls")
-        -- end,
-    }
-    use "windwp/nvim-autopairs"
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-nvim-lsp'
     use 'hrsh7th/cmp-buffer'
@@ -55,5 +45,16 @@ return require('packer').startup(function(use)
         requires = 'nvim-tree/nvim-web-devicons' }
 
     use 'moll/vim-bbye'
+
+    use({
+        "iamcco/markdown-preview.nvim",
+        run = function() vim.fn["mkdp#util#install"]() end,
+        ft = { "markdown" },
+    })
+
+    use({
+        'MeanderingProgrammer/render-markdown.nvim',
+        requires = { 'nvim-tree/nvim-web-devicons', opt = true },
+    })
 
 end)

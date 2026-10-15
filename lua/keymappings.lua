@@ -34,21 +34,24 @@ map("n", "sc", "<C-w>c", opt)        -- 关闭当前窗口
 map("n", "<C-j>", "<C-w>j", opt)
 map("n", "<C-k>", "<C-w>k", opt)
 map("n", "<C-h>", "<C-w>h", opt)
-map("n", "<C-l>", "<C-w>l", opt)
+map("n", "<BS>", "<C-w>h", opt)
 
 -- =========================
 -- 文件操作
 -- =========================
 map("n", "ww", ":w<CR>", opt)        -- 保存
-map("n", "rl", ":e!<CR>", opt)       -- 重新加载
-map("n", "q", ":Bdelete!<CR>", opt)  -- 关闭 buffer
-map("n", "qq", ":q<CR>", opt)        -- 退出窗口
-map("n", "wq", ":w<CR> | :Bdelete!<CR>", opt) -- 保存并关闭 buffer
+map("n", "rl", ":e<CR>", opt)        -- 刷新重新载入当前文件
+map("n", "q", ":SmartCloseBuffer<CR>", opt)  -- 关闭当前文件与标签页
+map("n", "qq", ":SmartCloseBuffer<CR>", opt) -- 关闭当前文件与标签页，并显示上一个标签页（单文件不破分布局）
+map("n", "wq", ":w<CR> | :SmartCloseBuffer<CR>", opt) -- 保存并关闭 buffer
+map("n", "<C-r>", "<Nop>", opt)      -- 屏蔽意外将内容置空或重做丢失内容的操作
 
 -- =========================
 -- 搜索 & 文件导航
 -- =========================
 map("n", "<Esc>", ":nohlsearch<CR><Esc>", opt) -- 取消高亮
+map("n", "<C-l>", "<cmd>nohlsearch<CR><cmd>redraw!<CR>", opt)
+map("n", "<leader>r", "<cmd>mode<CR><cmd>redraw!<CR>", opt)
 
 -- 文件树
 map("n", "tr", ":NvimTreeToggle<CR>", opt)
@@ -88,5 +91,7 @@ map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR><cmd>cclose<CR>", opt) -- �
 -- 代码格式化
 vim.api.nvim_set_keymap("n", "<C-A-l>", "<cmd>lua vim.lsp.buf.format({ async = false })<CR><cmd>normal! gg=G<CR>", opts)
 
--- 设置 ff 为打开/关闭 tagbar 的快捷键
-map("n", "ff", ":TagbarToggle<CR>", opt)
+map("n", "<leader>dl", ":DevLayout<CR>", opt)
+map("n", "<leader>op", ":OpenCodeToggle<CR>", opt)
+map("t", "<Esc><Esc>", "<C-\\><C-n>", opt)
+

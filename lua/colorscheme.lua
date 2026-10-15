@@ -16,3 +16,15 @@ if not ok then
     return
 end
 
+local function sync_markdown_padding()
+    local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
+    if normal and normal.bg then
+        vim.api.nvim_set_hl(0, "RenderMarkdownPadding", { bg = normal.bg })
+    end
+end
+sync_markdown_padding()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = sync_markdown_padding,
+})
+

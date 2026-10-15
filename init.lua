@@ -23,10 +23,9 @@ require("lsp.setup")
 require("plugin-config.lspsaga")
 require("plugin-config.rust_analyzer")
 require("plugin-config.python")
-require("plugin-config.null-ls")
-require("plugin-config.tagbar")
--- require("plugin-config.ai")
 require("lsp.dap")
+require("layout")
+require("plugin-config.markdown")
 -- 设置 GUI 字体（可选，主要针对 Neovim GUI）
 vim.opt.guifont = "Hack Nerd Font:h12"
 
