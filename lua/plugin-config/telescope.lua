@@ -6,33 +6,34 @@ function M.choose_colorscheme()
     local pickers = require("telescope.pickers")
     local finders = require("telescope.finders")
     local conf = require("telescope.config").values
+    local vsc_themes = require("plugin-config.vscode_themes")
 
     local initial_scheme = vim.g.colors_name or "vscode"
+    local initial_bg = vim.o.background
     local need_restore = true
 
-    local available_schemes = { "vscode", "gruvbox" }
-    for _, name in ipairs(vim.fn.getcompletion("", "color")) do
-        if not vim.tbl_contains(available_schemes, name) then
-            table.insert(available_schemes, name)
-        end
-    end
+    local available_themes = vsc_themes.themes
 
-    local function apply_theme(name)
-        if name and name ~= "" then
-            local ok = pcall(vim.cmd, "colorscheme " .. name)
-            if ok then
-                local cs_mod = package.loaded["colorscheme"]
-                if cs_mod and cs_mod.sync_all_themes then
-                    cs_mod.sync_all_themes()
-                end
-            end
+    local function apply_theme(theme_obj)
+        if not theme_obj then return end
+        if theme_obj.type == "gruvbox" then
+            pcall(vim.cmd, "colorscheme gruvbox")
+        else
+            vsc_themes.apply(theme_obj.id)
         end
     end
 
     local picker = pickers.new({}, {
-        prompt_title = "Theme Picker (j/k 实时预览，回车确认，Esc取消)",
+        prompt_title = "Select Theme (j/k 实时联动预览，回车确认，Esc取消)",
         finder = finders.new_table({
-            results = available_schemes,
+            results = available_themes,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry.name,
+                    ordinal = entry.name .. " " .. entry.id,
+                }
+            end,
         }),
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
@@ -43,8 +44,8 @@ function M.choose_colorscheme()
                     actions.move_selection_previous(prompt_bufnr)
                 end
                 local entry = action_state.get_selected_entry()
-                if entry and entry[1] then
-                    apply_theme(entry[1])
+                if entry and entry.value then
+                    apply_theme(entry.value)
                 end
             end
 
@@ -59,16 +60,21 @@ function M.choose_colorscheme()
                 local selection = action_state.get_selected_entry()
                 need_restore = false
                 actions.close(prompt_bufnr)
-                if selection and selection[1] then
-                    apply_theme(selection[1])
-                    vim.notify("Active Theme: " .. selection[1], vim.log.levels.INFO)
+                if selection and selection.value then
+                    apply_theme(selection.value)
+                    vim.notify("Active Theme: " .. selection.value.name, vim.log.levels.INFO)
                 end
             end)
 
             actions.close:enhance({
                 post = function()
                     if need_restore then
-                        apply_theme(initial_scheme)
+                        vim.o.background = initial_bg
+                        pcall(vim.cmd, "colorscheme " .. initial_scheme)
+                        local cs_mod = package.loaded["colorscheme"]
+                        if cs_mod and cs_mod.sync_all_themes then
+                            cs_mod.sync_all_themes()
+                        end
                     end
                 end,
             })

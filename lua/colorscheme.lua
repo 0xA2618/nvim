@@ -1,15 +1,14 @@
 -- colorscheme.lua
 
-local colorscheme = "vscode"
+local ok_vsc, vsc_themes = pcall(require, "plugin-config.vscode_themes")
 
-local ok, err = pcall(vim.cmd, string.format("colorscheme %s", colorscheme))
-
-if not ok then
-    vim.notify(
-        string.format("Colorscheme '%s' not found: %s", colorscheme, err),
-        vim.log.levels.ERROR
-    )
-    pcall(vim.cmd, "colorscheme gruvbox")
+if ok_vsc then
+    vsc_themes.apply("Light 2026")
+else
+    local ok, _ = pcall(vim.cmd, "colorscheme vscode")
+    if not ok then
+        pcall(vim.cmd, "colorscheme gruvbox")
+    end
 end
 
 local function sync_all_themes()
@@ -40,4 +39,3 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 local M = {}
 M.sync_all_themes = sync_all_themes
 return M
-
