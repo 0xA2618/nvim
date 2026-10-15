@@ -7,6 +7,9 @@ function M.choose_colorscheme()
     local finders = require("telescope.finders")
     local conf = require("telescope.config").values
 
+    local initial_scheme = vim.g.colors_name or "vscode"
+    local need_restore = true
+
     local available_schemes = { "vscode", "gruvbox" }
     for _, name in ipairs(vim.fn.getcompletion("", "color")) do
         if not vim.tbl_contains(available_schemes, name) then
@@ -14,31 +17,67 @@ function M.choose_colorscheme()
         end
     end
 
-    pickers.new({}, {
-        prompt_title = "Select Theme (Enter to apply)",
+    local function apply_theme(name)
+        if name and name ~= "" then
+            local ok = pcall(vim.cmd, "colorscheme " .. name)
+            if ok then
+                local cs_mod = package.loaded["colorscheme"]
+                if cs_mod and cs_mod.sync_all_themes then
+                    cs_mod.sync_all_themes()
+                end
+            end
+        end
+    end
+
+    local picker = pickers.new({}, {
+        prompt_title = "Theme Picker (j/k 实时预览，回车确认，Esc取消)",
         finder = finders.new_table({
             results = available_schemes,
         }),
         sorter = conf.generic_sorter({}),
         attach_mappings = function(prompt_bufnr, map)
+            local function move_and_preview(direction)
+                if direction == "next" then
+                    actions.move_selection_next(prompt_bufnr)
+                else
+                    actions.move_selection_previous(prompt_bufnr)
+                end
+                local entry = action_state.get_selected_entry()
+                if entry and entry[1] then
+                    apply_theme(entry[1])
+                end
+            end
+
+            map("i", "<C-n>", function() move_and_preview("next") end)
+            map("i", "<C-p>", function() move_and_preview("prev") end)
+            map("i", "<Down>", function() move_and_preview("next") end)
+            map("i", "<Up>", function() move_and_preview("prev") end)
+            map("n", "j", function() move_and_preview("next") end)
+            map("n", "k", function() move_and_preview("prev") end)
+
             actions.select_default:replace(function()
                 local selection = action_state.get_selected_entry()
+                need_restore = false
                 actions.close(prompt_bufnr)
                 if selection and selection[1] then
-                    local scheme = selection[1]
-                    local ok = pcall(vim.cmd, "colorscheme " .. scheme)
-                    if ok then
-                        local cs_mod = package.loaded["colorscheme"]
-                        if cs_mod and cs_mod.sync_all_themes then
-                            cs_mod.sync_all_themes()
-                        end
-                        vim.notify("Active Theme: " .. scheme, vim.log.levels.INFO)
-                    end
+                    apply_theme(selection[1])
+                    vim.notify("Active Theme: " .. selection[1], vim.log.levels.INFO)
                 end
             end)
+
+            actions.close:enhance({
+                post = function()
+                    if need_restore then
+                        apply_theme(initial_scheme)
+                    end
+                end,
+            })
+
             return true
         end,
-    }):find()
+    })
+
+    picker:find()
 end
 
 function M.command_palette()
@@ -65,7 +104,7 @@ function M.command_palette()
             end,
         },
         {
-            title = "Preferences: Color Theme (切换配色主题)",
+            title = "Preferences: Color Theme (切换配色主题 - 实时联动)",
             action = function()
                 vim.schedule(M.choose_colorscheme)
             end,
@@ -108,7 +147,7 @@ function M.command_palette()
     }
 
     pickers.new({}, {
-        prompt_title = "> Command Palette (Shift+Cmd+P)",
+        prompt_title = "> Command Palette (F1 / Space+p)",
         finder = finders.new_table({
             results = commands,
             entry_maker = function(entry)
