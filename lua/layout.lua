@@ -89,6 +89,7 @@ function M.setup_layout()
     if tree_win and vim.api.nvim_win_is_valid(tree_win) then
         vim.api.nvim_set_current_win(tree_win)
         vim.cmd("wincmd H")
+        vim.wo[tree_win].winhighlight = "Normal:NvimTreeNormal,NormalNC:NvimTreeNormalNC,EndOfBuffer:NvimTreeNormal,SignColumn:NvimTreeNormal"
     end
 
     local main_win = find_main_editor_win()

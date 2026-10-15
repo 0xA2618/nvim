@@ -65,8 +65,8 @@ local function sync_all_themes()
             else
                 vim.wo[win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
             end
-        elseif ft == "NvimTree" and is_light then
-            vim.wo[win].winhighlight = "Normal:NvimTreeNormal,NormalNC:NvimTreeNormalNC"
+        elseif ft == "NvimTree" then
+            vim.wo[win].winhighlight = "Normal:NvimTreeNormal,NormalNC:NvimTreeNormalNC,EndOfBuffer:NvimTreeNormal,SignColumn:NvimTreeNormal"
         end
     end
 
