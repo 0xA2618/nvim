@@ -43,6 +43,13 @@ function M.apply(style_or_name)
 
     sync_opencode_theme(is_light)
 
+    local layout = package.loaded["layout"]
+    if layout and layout.restart_opencode then
+        vim.schedule(function()
+            layout.restart_opencode()
+        end)
+    end
+
     local cs_mod = package.loaded["colorscheme"]
     if type(cs_mod) == "table" and cs_mod.sync_all_themes then
         cs_mod.sync_all_themes()

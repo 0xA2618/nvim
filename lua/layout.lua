@@ -130,6 +130,23 @@ function M.setup_layout()
     end
 end
 
+function M.restart_opencode()
+    local term_win = find_opencode_win()
+    if opencode_buf and vim.api.nvim_buf_is_valid(opencode_buf) then
+        pcall(vim.api.nvim_buf_delete, opencode_buf, { force = true })
+        opencode_buf = nil
+    end
+
+    if term_win and vim.api.nvim_win_is_valid(term_win) then
+        opencode_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_win_set_buf(term_win, opencode_buf)
+        local opencode_cmd = find_opencode_cmd()
+        vim.fn.termopen(opencode_cmd)
+        vim.bo[opencode_buf].buflisted = false
+        vim.wo[term_win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
+    end
+end
+
 function M.toggle_opencode()
     local term_win = find_opencode_win()
     if term_win and vim.api.nvim_win_is_valid(term_win) then
@@ -153,6 +170,20 @@ function M.toggle_opencode()
 
     if opencode_buf and vim.api.nvim_buf_is_valid(opencode_buf) then
         vim.api.nvim_win_set_buf(new_term_win, opencode_buf)
+    else
+        opencode_buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_win_set_buf(new_term_win, opencode_buf)
+        local opencode_cmd = find_opencode_cmd()
+        vim.fn.termopen(opencode_cmd)
+        vim.bo[opencode_buf].buflisted = false
+    end
+
+    local tree_win = find_tree_win()
+    adjust_sizes(tree_win, new_term_win)
+
+    vim.api.nvim_set_current_win(new_term_win)
+    vim.cmd("startinsert")
+end
     else
         opencode_buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_win_set_buf(new_term_win, opencode_buf)
