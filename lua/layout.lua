@@ -4,13 +4,13 @@ local opencode_buf = nil
 
 local function find_opencode_cmd()
     local direct_path = "/Users/Yang/.opencode/bin/opencode"
-    local bin = "opencode"
     if vim.fn.executable(direct_path) == 1 then
-        bin = direct_path
-    elseif vim.fn.executable("opencode") ~= 1 then
-        return vim.o.shell
+        return direct_path
     end
-    return bin .. " --mini"
+    if vim.fn.executable("opencode") == 1 then
+        return "opencode"
+    end
+    return vim.o.shell
 end
 
 local function find_tree_win()
