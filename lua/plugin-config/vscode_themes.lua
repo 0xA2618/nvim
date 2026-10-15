@@ -4,7 +4,7 @@ local vscode = require('vscode')
 
 local function sync_opencode_theme(is_light)
     local tui_config_path = vim.fn.expand("~/.config/opencode/tui.json")
-    local desired_theme = is_light and "light" or "dark"
+    local desired_theme = is_light and "opencode" or "dark"
 
     if vim.fn.filereadable(tui_config_path) == 1 then
         local raw = vim.fn.readfile(tui_config_path)
@@ -19,7 +19,7 @@ local function sync_opencode_theme(is_light)
     end
 end
 
-function M.apply(style_or_name)
+function M.apply(style_or_name, is_permanent)
     local target = style_or_name or "dark"
     local is_light = false
 
@@ -30,7 +30,7 @@ function M.apply(style_or_name)
         vim.o.background = "light"
         pcall(vim.cmd, "colorscheme gruvbox")
         is_light = true
-    elseif target:find("light") or target == "vs-light" or target == "Light 2026" or target == "Light Modern" or target == "Light+" or target == "Visual Studio Light" then
+    elseif target:find("light") or target:find("Light") or target == "vs-light" or target == "Visual Studio Light" then
         vim.o.background = "light"
         vscode.setup({ style = "light" })
         vscode.load("light")
@@ -41,13 +41,14 @@ function M.apply(style_or_name)
         vscode.load("dark")
     end
 
-    sync_opencode_theme(is_light)
-
-    local layout = package.loaded["layout"]
-    if layout and layout.restart_opencode then
-        vim.schedule(function()
-            layout.restart_opencode()
-        end)
+    if is_permanent then
+        sync_opencode_theme(is_light)
+        local layout = package.loaded["layout"]
+        if layout and layout.restart_opencode then
+            vim.schedule(function()
+                layout.restart_opencode()
+            end)
+        end
     end
 
     local cs_mod = package.loaded["colorscheme"]

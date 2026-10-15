@@ -14,17 +14,25 @@ function M.choose_colorscheme()
 
     local available_themes = vsc_themes.themes
 
-    local function apply_theme(theme_obj)
+    local function apply_theme(theme_obj, is_permanent)
         if not theme_obj then return end
         if theme_obj.type == "gruvbox" then
+            vim.o.background = "dark"
+            pcall(vim.cmd, "colorscheme gruvbox")
+        elseif theme_obj.type == "gruvbox_light" then
+            vim.o.background = "light"
             pcall(vim.cmd, "colorscheme gruvbox")
         else
-            vsc_themes.apply(theme_obj.id)
+            vsc_themes.apply(theme_obj.id, is_permanent)
+        end
+        local cs_mod = package.loaded["colorscheme"]
+        if cs_mod and cs_mod.sync_all_themes then
+            cs_mod.sync_all_themes()
         end
     end
 
     local picker = pickers.new({}, {
-        prompt_title = "Select Theme (j/k 实时联动预览，回车确认，Esc取消)",
+        prompt_title = "Theme Picker (j/k 实时预览，回车确认，Esc取消)",
         finder = finders.new_table({
             results = available_themes,
             entry_maker = function(entry)
@@ -45,7 +53,7 @@ function M.choose_colorscheme()
                 end
                 local entry = action_state.get_selected_entry()
                 if entry and entry.value then
-                    apply_theme(entry.value)
+                    apply_theme(entry.value, false)
                 end
             end
 
@@ -61,7 +69,7 @@ function M.choose_colorscheme()
                 need_restore = false
                 actions.close(prompt_bufnr)
                 if selection and selection.value then
-                    apply_theme(selection.value)
+                    apply_theme(selection.value, true)
                     vim.notify("Active Theme: " .. selection.value.name, vim.log.levels.INFO)
                 end
             end)

@@ -117,8 +117,7 @@ map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR><cmd>cclose<CR>", opt) -- å
 vim.api.nvim_set_keymap("n", "<C-A-l>", "<cmd>lua vim.lsp.buf.format({ async = false })<CR><cmd>normal! gg=G<CR>", opts)
 
 map("n", "<leader>dl", ":DevLayout<CR>", opt)
-map("n", "<leader>op", ":OpenCodeToggle<CR>", opt)
-map("n", "<leader>j", ":OpenCodeToggle<CR>", opt)
+map("n", "<leader>oc", ":OpenCodeToggle<CR>", opt)
 map("n", "<C-`>", ":OpenCodeToggle<CR>", opt)
 map("i", "<C-`>", "<C-o>:OpenCodeToggle<CR>", opt)
 map("t", "<C-`>", "<C-\\><C-n>:OpenCodeToggle<CR>", opt)
