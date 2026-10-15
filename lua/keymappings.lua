@@ -118,5 +118,11 @@ vim.api.nvim_set_keymap("n", "<C-A-l>", "<cmd>lua vim.lsp.buf.format({ async = f
 
 map("n", "<leader>dl", ":DevLayout<CR>", opt)
 map("n", "<leader>op", ":OpenCodeToggle<CR>", opt)
+map("n", "<D-S-K>", ":OpenCodeToggle<CR>", opt)
+map("n", "<D-k>", ":OpenCodeToggle<CR>", opt)
+map("i", "<D-S-K>", "<C-o>:OpenCodeToggle<CR>", opt)
+map("i", "<D-k>", "<C-o>:OpenCodeToggle<CR>", opt)
+map("t", "<D-S-K>", "<C-\\><C-n>:OpenCodeToggle<CR>", opt)
+map("t", "<D-k>", "<C-\\><C-n>:OpenCodeToggle<CR>", opt)
 map("t", "<Esc><Esc>", "<C-\\><C-n>", opt)
 

@@ -132,18 +132,43 @@ end
 
 function M.restart_opencode()
     local term_win = find_opencode_win()
-    if opencode_buf and vim.api.nvim_buf_is_valid(opencode_buf) then
-        pcall(vim.api.nvim_buf_delete, opencode_buf, { force = true })
-        opencode_buf = nil
+    local main_win = find_main_editor_win()
+
+    if not term_win or not vim.api.nvim_win_is_valid(term_win) then
+        if not main_win or not vim.api.nvim_win_is_valid(main_win) then
+            M.setup_layout()
+            return
+        end
+        vim.api.nvim_set_current_win(main_win)
+        vim.cmd("belowright split")
+        term_win = vim.api.nvim_get_current_win()
+        local tree_win = find_tree_win()
+        adjust_sizes(tree_win, term_win)
     end
 
-    if term_win and vim.api.nvim_win_is_valid(term_win) then
-        opencode_buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_win_set_buf(term_win, opencode_buf)
-        local opencode_cmd = find_opencode_cmd()
-        vim.fn.termopen(opencode_cmd)
-        vim.bo[opencode_buf].buflisted = false
+    local new_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_win_set_buf(term_win, new_buf)
+
+    local old_buf = opencode_buf
+    opencode_buf = new_buf
+
+    local opencode_cmd = find_opencode_cmd()
+    vim.fn.termopen(opencode_cmd)
+    vim.bo[new_buf].buflisted = false
+
+    local is_light = vim.o.background == "light"
+    if is_light then
+        vim.wo[term_win].winhighlight = "Normal:Terminal,NormalNC:Terminal,SignColumn:Terminal"
+    else
         vim.wo[term_win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
+    end
+
+    if old_buf and vim.api.nvim_buf_is_valid(old_buf) and old_buf ~= new_buf then
+        pcall(vim.api.nvim_buf_delete, old_buf, { force = true })
+    end
+
+    if main_win and vim.api.nvim_win_is_valid(main_win) then
+        vim.api.nvim_set_current_win(main_win)
     end
 end
 
