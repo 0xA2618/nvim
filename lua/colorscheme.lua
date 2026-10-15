@@ -10,21 +10,58 @@ else
 end
 
 local function sync_all_themes()
+    local is_light = vim.o.background == "light"
     local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
-    if normal and normal.bg then
-        vim.api.nvim_set_hl(0, "RenderMarkdownPadding", { bg = normal.bg })
-        vim.api.nvim_set_hl(0, "Terminal", { bg = normal.bg, fg = normal.fg })
-    end
 
-    local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#282828"
-    vim.g.terminal_color_background = term_bg
+    if is_light then
+        vim.api.nvim_set_hl(0, "Normal", { bg = "#ffffff", fg = "#202020" })
+        vim.api.nvim_set_hl(0, "NormalNC", { bg = "#fafafa", fg = "#505050" })
+        vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "#f3f3f3", fg = "#333333" })
+        vim.api.nvim_set_hl(0, "NvimTreeNormalNC", { bg = "#f3f3f3", fg = "#555555" })
+        vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { fg = "#f3f3f3", bg = "#f3f3f3" })
+        vim.api.nvim_set_hl(0, "NvimTreeCursorLine", { bg = "#e4e6f1" })
+        vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#e5e5e5", bg = "NONE" })
+        vim.api.nvim_set_hl(0, "LineNr", { fg = "#999999", bg = "#ffffff" })
+        vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#007acc", bg = "#f3f3f3", bold = true })
+        vim.api.nvim_set_hl(0, "CursorLine", { bg = "#f5f5f5" })
+
+        vim.api.nvim_set_hl(0, "Terminal", { bg = "#f8f9fa", fg = "#202020" })
+        vim.g.terminal_color_background = "#f8f9fa"
+        vim.g.terminal_color_foreground = "#202020"
+        vim.g.terminal_color_0 = "#f8f9fa"
+        vim.g.terminal_color_7 = "#202020"
+        vim.g.terminal_color_8 = "#888888"
+        vim.g.terminal_color_15 = "#111111"
+
+        vim.api.nvim_set_hl(0, "RenderMarkdownPadding", { bg = "#ffffff" })
+    else
+        if normal and normal.bg then
+            vim.api.nvim_set_hl(0, "RenderMarkdownPadding", { bg = normal.bg })
+            vim.api.nvim_set_hl(0, "Terminal", { bg = normal.bg, fg = normal.fg })
+        end
+        local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#282828"
+        vim.g.terminal_color_background = term_bg
+        vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#3c3836", bg = "NONE" })
+    end
 
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         local buf = vim.api.nvim_win_get_buf(win)
         local bt = vim.bo[buf].buftype
+        local ft = vim.bo[buf].filetype
         if bt == "terminal" then
-            vim.wo[win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
+            if is_light then
+                vim.wo[win].winhighlight = "Normal:Terminal,NormalNC:Terminal,SignColumn:Terminal"
+            else
+                vim.wo[win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
+            end
+        elseif ft == "NvimTree" and is_light then
+            vim.wo[win].winhighlight = "Normal:NvimTreeNormal,NormalNC:NvimTreeNormalNC"
         end
+    end
+
+    local ok_lualine, lualine = pcall(require, "lualine")
+    if ok_lualine then
+        lualine.setup()
     end
 end
 
