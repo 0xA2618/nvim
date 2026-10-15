@@ -32,8 +32,8 @@ return require('packer').startup(function(use)
     use 'rcarriga/nvim-dap-ui'
     use 'nvim-tree/nvim-web-devicons'
     use 'numToStr/Comment.nvim'
-    -- use 'folke/tokyonight.nvim'
     use 'morhetz/gruvbox'
+    use 'Mofiqul/vscode.nvim'
     use 'mfussenegger/nvim-dap-python'
     use 'glepnir/dashboard-nvim' -- 面板
     -- AI 插件

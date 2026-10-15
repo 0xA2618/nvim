@@ -75,7 +75,14 @@ map("n", "tr", ":NvimTreeToggle<CR>", opt)
 -- Telescope
 map("n", "<C-p>", ":Telescope find_files<CR>", opt) -- 文件搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)  -- 全局搜索
-map("n", "<leader>th", ":Telescope colorscheme enable_preview=true<CR>", opt)
+map("n", "<leader>th", ":SelectTheme<CR>", opt)
+map("n", "<D-P>", ":VSCodeCommandPalette<CR>", opt)
+map("n", "<D-S-P>", ":VSCodeCommandPalette<CR>", opt)
+map("n", "<C-S-P>", ":VSCodeCommandPalette<CR>", opt)
+map("n", "<leader>cp", ":VSCodeCommandPalette<CR>", opt)
+map("v", "<leader>cp", ":VSCodeCommandPalette<CR>", opt)
+map("t", "<D-P>", "<C-\\><C-n>:VSCodeCommandPalette<CR>", opt)
+map("t", "<D-S-P>", "<C-\\><C-n>:VSCodeCommandPalette<CR>", opt)
 map("n", "gith", ":Telescope git_commits<CR>", opt) -- Git 提交历史
 -- map("n", "gits", ":Telescope git_status<CR>", opt)
 

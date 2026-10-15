@@ -114,6 +114,7 @@ function M.setup_layout()
             vim.fn.termopen(opencode_cmd)
             vim.bo[opencode_buf].buflisted = false
         end
+        vim.wo[term_win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
     end
 
     adjust_sizes(tree_win, term_win)

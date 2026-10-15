@@ -1,30 +1,43 @@
 -- colorscheme.lua
 
--- 设置颜色方案名称
-local colorscheme = "gruvbox"
--- local colorscheme = "tokyonight"
+local colorscheme = "vscode"
 
--- 尝试加载颜色方案
 local ok, err = pcall(vim.cmd, string.format("colorscheme %s", colorscheme))
 
--- 如果加载失败，发出错误通知并附带错误信息
 if not ok then
     vim.notify(
         string.format("Colorscheme '%s' not found: %s", colorscheme, err),
         vim.log.levels.ERROR
     )
-    return
+    pcall(vim.cmd, "colorscheme gruvbox")
 end
 
-local function sync_markdown_padding()
+local function sync_all_themes()
     local normal = vim.api.nvim_get_hl(0, { name = "Normal" })
     if normal and normal.bg then
         vim.api.nvim_set_hl(0, "RenderMarkdownPadding", { bg = normal.bg })
+        vim.api.nvim_set_hl(0, "Terminal", { bg = normal.bg, fg = normal.fg })
+    end
+
+    local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#1e1e1e"
+    vim.g.terminal_color_background = term_bg
+
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        local bt = vim.bo[buf].buftype
+        if bt == "terminal" then
+            vim.wo[win].winhighlight = "Normal:Normal,NormalNC:NormalNC,SignColumn:Normal"
+        end
     end
 end
-sync_markdown_padding()
+
+sync_all_themes()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
-    callback = sync_markdown_padding,
+    callback = sync_all_themes,
 })
+
+local M = {}
+M.sync_all_themes = sync_all_themes
+return M
 
