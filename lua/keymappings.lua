@@ -36,6 +36,11 @@ map("n", "<C-k>", "<C-w>k", opt)
 map("n", "<C-h>", "<C-w>h", opt)
 map("n", "<BS>", "<C-w>h", opt)
 
+map("n", "<A-Up>", ":resize +2<CR>", opt)
+map("n", "<A-Down>", ":resize -2<CR>", opt)
+map("n", "<A-Left>", ":vertical resize -2<CR>", opt)
+map("n", "<A-Right>", ":vertical resize +2<CR>", opt)
+
 -- =========================
 -- 文件操作
 -- =========================
@@ -70,6 +75,7 @@ map("n", "tr", ":NvimTreeToggle<CR>", opt)
 -- Telescope
 map("n", "<C-p>", ":Telescope find_files<CR>", opt) -- 文件搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)  -- 全局搜索
+map("n", "<leader>th", ":Telescope colorscheme enable_preview=true<CR>", opt)
 map("n", "gith", ":Telescope git_commits<CR>", opt) -- Git 提交历史
 -- map("n", "gits", ":Telescope git_status<CR>", opt)
 

@@ -56,6 +56,16 @@ vim.o.incsearch = true             -- 边输入边搜索
 -- 输入 & 编辑
 -- =========================
 vim.o.mouse = "a"                  -- 启用鼠标
+vim.o.mousemodel = "extend"        -- 鼠标行为扩展
+vim.opt.fillchars = {
+    vert = "│",
+    horiz = "─",
+    horizup = "┴",
+    horizdown = "┬",
+    vertleft = "┤",
+    vertright = "├",
+    verthoriz = "┼",
+}
 vim.o.completeopt = "menu,menuone,noselect" -- 补全菜单行为
 
 -- =========================
