@@ -75,6 +75,12 @@ vim.o.viminfo = ""                 -- 禁用 viminfo 文件
 -- =========================
 vim.o.clipboard = "unnamedplus"
 
+vim.api.nvim_create_autocmd("FocusGained", {
+    callback = function()
+        vim.cmd("redraw!")
+    end,
+})
+
 -- =========================
 -- 会在有错误的位置显示
 -- =========================

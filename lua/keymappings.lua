@@ -50,8 +50,19 @@ map("n", "<C-r>", "<Nop>", opt)      -- 屏蔽意外将内容置空或重做丢�
 -- 搜索 & 文件导航
 -- =========================
 map("n", "<Esc>", ":nohlsearch<CR><Esc>", opt) -- 取消高亮
-map("n", "<C-l>", "<cmd>nohlsearch<CR><cmd>redraw!<CR>", opt)
-map("n", "<leader>r", "<cmd>mode<CR><cmd>redraw!<CR>", opt)
+local function smart_redraw()
+    vim.cmd("nohlsearch")
+    vim.cmd("diffupdate")
+    pcall(vim.cmd, "syntax sync fromstart")
+    vim.cmd("mode")
+    vim.cmd("redraw!")
+end
+
+map("n", "<C-l>", "<cmd>lua vim.cmd('nohlsearch'); vim.cmd('mode'); vim.cmd('redraw!')<CR>", opt)
+map("v", "<C-l>", "<cmd>lua vim.cmd('nohlsearch'); vim.cmd('mode'); vim.cmd('redraw!')<CR>", opt)
+map("i", "<C-l>", "<C-o><cmd>lua vim.cmd('nohlsearch'); vim.cmd('mode'); vim.cmd('redraw!')<CR>", opt)
+map("t", "<C-l>", "<C-\\><C-n><cmd>lua vim.cmd('nohlsearch'); vim.cmd('mode'); vim.cmd('redraw!')<CR>i", opt)
+map("n", "<leader>r", "<cmd>lua vim.cmd('nohlsearch'); vim.cmd('mode'); vim.cmd('redraw!')<CR>", opt)
 
 -- 文件树
 map("n", "tr", ":NvimTreeToggle<CR>", opt)
