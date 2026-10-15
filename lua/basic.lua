@@ -66,6 +66,7 @@ vim.opt.fillchars = {
     vertleft = "┤",
     vertright = "├",
     verthoriz = "┼",
+    eob = " ",                         -- 彻底移除末尾多余的 ~ 波浪号标记
 }
 vim.o.completeopt = "menu,menuone,noselect" -- 补全菜单行为
 

@@ -29,6 +29,21 @@ require('nvim-tree').setup({
         width = 30,
         side = 'left',
         preserve_window_proportions = true,
+        signcolumn = "no",
+    },
+    renderer = {
+        icons = {
+            glyphs = {
+                folder = {
+                    arrow_closed = "›",
+                    arrow_open = "⌄",
+                    default = "",
+                    open = "",
+                    empty = "",
+                    empty_open = "",
+                },
+            },
+        },
     },
     actions = {
         open_file = {
