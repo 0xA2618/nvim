@@ -3,12 +3,10 @@
 local ok_vsc, vsc_themes = pcall(require, "plugin-config.vscode_themes")
 
 if ok_vsc then
-    vsc_themes.apply("Light 2026")
+    vsc_themes.apply("gruvbox")
 else
-    local ok, _ = pcall(vim.cmd, "colorscheme vscode")
-    if not ok then
-        pcall(vim.cmd, "colorscheme gruvbox")
-    end
+    vim.o.background = "dark"
+    pcall(vim.cmd, "colorscheme gruvbox")
 end
 
 local function sync_all_themes()
@@ -18,7 +16,7 @@ local function sync_all_themes()
         vim.api.nvim_set_hl(0, "Terminal", { bg = normal.bg, fg = normal.fg })
     end
 
-    local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#1e1e1e"
+    local term_bg = normal and normal.bg and string.format("#%06x", normal.bg) or "#282828"
     vim.g.terminal_color_background = term_bg
 
     for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
