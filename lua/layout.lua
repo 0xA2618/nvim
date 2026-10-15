@@ -146,6 +146,9 @@ function M.restart_opencode()
         adjust_sizes(tree_win, term_win)
     end
 
+    local prev_win = vim.api.nvim_get_current_win()
+    vim.api.nvim_set_current_win(term_win)
+
     local new_buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_win_set_buf(term_win, new_buf)
 
@@ -167,7 +170,9 @@ function M.restart_opencode()
         pcall(vim.api.nvim_buf_delete, old_buf, { force = true })
     end
 
-    if main_win and vim.api.nvim_win_is_valid(main_win) then
+    if prev_win and vim.api.nvim_win_is_valid(prev_win) then
+        vim.api.nvim_set_current_win(prev_win)
+    elseif main_win and vim.api.nvim_win_is_valid(main_win) then
         vim.api.nvim_set_current_win(main_win)
     end
 end
