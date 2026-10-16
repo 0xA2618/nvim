@@ -123,7 +123,7 @@
 | **`<C-f>`** | 全局 | Telescope 全局文本内容搜索 (`live_grep`) |
 | **`gd`** | 代码区 | LSP 跳转到函数/变量定义处 |
 | **`gr`** | 代码区 | LSP 查看所有引用列表 |
-| **`<Ctrl-Opt-l>`** (`<C-A-l>`) | 代码区 (Normal/Visual) | 一键代码格式化（支持 JSON、YAML、SQL/MySQL 及主流编程语言，严格 4 格空格缩进） |
+| **`<Ctrl-Opt-l>`** / **`<Space>fm`** | 代码区 (Normal/Visual) | 一键代码格式化（支持带/不带Shift、支持 `<Space>fm` / `<Space>cf`，严格 4 格空格缩进） |
 
 ---
 
