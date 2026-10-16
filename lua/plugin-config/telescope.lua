@@ -132,7 +132,7 @@ function M.command_palette()
     }
 
     pickers.new({}, {
-        prompt_title = "> Command Palette (F1 / Space+p)",
+        prompt_title = "> Command Palette (Space+p)",
         finder = finders.new_table({
             results = commands,
             entry_maker = function(entry)

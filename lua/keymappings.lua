@@ -28,9 +28,8 @@ map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 
 map("n", "<Space>p", ":VSCodeCommandPalette<CR>", opt)
-map("n", "<F1>", ":VSCodeCommandPalette<CR>", opt)
-map("i", "<F1>", "<C-o>:VSCodeCommandPalette<CR>", opt)
-map("t", "<F1>", "<C-\\><C-n>:VSCodeCommandPalette<CR>", opt)
+map("i", "<Space>p", "<C-o>:VSCodeCommandPalette<CR>", opt)
+map("t", "<Space>p", "<C-\\><C-n>:VSCodeCommandPalette<CR>", opt)
 
 map("n", "<Space>oc", ":OpenCodeToggle<CR>", opt)
 map("n", "<C-`>", ":OpenCodeToggle<CR>", opt)

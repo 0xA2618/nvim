@@ -112,7 +112,7 @@
 | **`tr`** | 全局 | 一键隐藏 / 打开左侧目录树结构 |
 | **`<Space>oc`** | 全局 | 一键隐藏 / 重新唤起右下方 `opencode` 窗口（保持会话历史） |
 | **`<C-~>`** | 全局 | VS Code 同款终端快速收起/展开快捷键 |
-| **`<F1>`** / **`<Space>p`** | 全局 | VS Code 风格命令面板（含 Window: Reload Window 瞬间恢复） |
+| **`<Space>p`** | 全局 | VS Code 风格命令面板（含 Window: Reload Window 瞬间恢复） |
 | **`<Space>th`** | 全局 | 动态交互式主题选择器（光标 j/k 移动实时联动全屏变色） |
 | **`M`** | 左侧目录树 | 打开 Markdown 模式选择菜单 (MPE / Markmap / Browser) |
 | **`yyp`** | 左侧目录树 | 复制当前文件或文件夹的完整绝对路径至系统剪贴板 |
