@@ -103,13 +103,13 @@ function M.command_palette()
 
     local commands = {
         {
-            title = "Preferences: Color Theme (切换配色主题 - 实时联动)",
+            title = "Preferences: Color Theme（切换配色主题 - 实时联动）",
             action = function()
                 vim.schedule(M.choose_colorscheme)
             end,
         },
         {
-            title = "> Window: Reload Window (重新加载窗口 / 重绘恢复)",
+            title = "> Window: Reload Window（重新加载窗口 / 重绘恢复）",
             action = function()
                 vim.cmd("nohlsearch")
                 vim.cmd("diffupdate")
@@ -121,41 +121,6 @@ function M.command_palette()
                     cs_mod.sync_all_themes()
                 end
                 vim.notify("Window reloaded successfully", vim.log.levels.INFO)
-            end,
-        },
-        {
-            title = "View: Toggle OpenCode (打开/隐藏 AI 对话终端)",
-            action = function()
-                local layout = package.loaded["layout"]
-                if layout and layout.toggle_opencode then
-                    layout.toggle_opencode()
-                end
-            end,
-        },
-        {
-            title = "View: Rebuild DevLayout (一键重建标准三栏工作区)",
-            action = function()
-                local layout = package.loaded["layout"]
-                if layout and layout.setup_layout then
-                    layout.setup_layout()
-                end
-            end,
-        },
-        {
-            title = "File: Save (保存文件)",
-            action = function()
-                vim.cmd("w")
-            end,
-        },
-        {
-            title = "File: Close Buffer (关闭当前标签页)",
-            action = function()
-                local layout = package.loaded["layout"]
-                if layout and layout.smart_close_buffer then
-                    layout.smart_close_buffer()
-                else
-                    vim.cmd("Bdelete!")
-                end
             end,
         },
     }
