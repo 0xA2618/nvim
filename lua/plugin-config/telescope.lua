@@ -123,6 +123,12 @@ function M.command_palette()
                 vim.notify("Window reloaded successfully", vim.log.levels.INFO)
             end,
         },
+        {
+            title = "Configuration: Reload Config（热重载 Neovim 配置文件）",
+            action = function()
+                vim.cmd("ReloadConfig")
+            end,
+        },
     }
 
     pickers.new({}, {

@@ -105,6 +105,18 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = "▲", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignInfo", { text = "ℹ", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "➤", texthl = "DiagnosticSignHint" })
 
+vim.api.nvim_create_user_command("ReloadConfig", function()
+    for name, _ in pairs(package.loaded) do
+        if name:match("^basic") or name:match("^colorscheme") or name:match("^keymappings")
+           or name:match("^layout") or name:match("^plugin%-config") or name:match("^lsp") then
+            package.loaded[name] = nil
+        end
+    end
+    local init_file = vim.env.MYVIMRC or vim.fn.expand("~/.config/nvim/init.lua")
+    dofile(init_file)
+    vim.notify("Neovim 配置文件热重载完成！", vim.log.levels.INFO)
+end, {})
+
 -- vim.o.number = true
 -- vim.o.relativenumber = true
 -- vim.o.cursorline = true
