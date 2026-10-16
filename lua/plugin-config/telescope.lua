@@ -103,7 +103,13 @@ function M.command_palette()
 
     local commands = {
         {
-            title = "Window: Reload Window (重新加载窗口 / 重绘恢复)",
+            title = "Preferences: Color Theme (切换配色主题 - 实时联动)",
+            action = function()
+                vim.schedule(M.choose_colorscheme)
+            end,
+        },
+        {
+            title = "> Window: Reload Window (重新加载窗口 / 重绘恢复)",
             action = function()
                 vim.cmd("nohlsearch")
                 vim.cmd("diffupdate")
@@ -115,12 +121,6 @@ function M.command_palette()
                     cs_mod.sync_all_themes()
                 end
                 vim.notify("Window reloaded successfully", vim.log.levels.INFO)
-            end,
-        },
-        {
-            title = "Preferences: Color Theme (切换配色主题 - 实时联动)",
-            action = function()
-                vim.schedule(M.choose_colorscheme)
             end,
         },
         {

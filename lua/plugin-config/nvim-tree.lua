@@ -3,16 +3,7 @@ local function my_on_attach(bufnr)
 
     api.config.mappings.default_on_attach(bufnr)
 
-    vim.keymap.set('n', 'M', function()
-        local node = api.tree.get_node_under_cursor()
-        if node and node.type == "file" and node.name:match("%.md$") then
-            require("plugin-config.markdown").choose_open_mode(node.absolute_path)
-        else
-            api.node.open.edit()
-        end
-    end, { buffer = bufnr, noremap = true, silent = true, desc = "Choose markdown open mode" })
-
-    vim.keymap.set('n', 'yyp', function()
+    local function copy_abs_path()
         local node = api.tree.get_node_under_cursor()
         if node and node.absolute_path then
             local path = node.absolute_path
@@ -20,7 +11,31 @@ local function my_on_attach(bufnr)
             vim.fn.setreg('"', path)
             vim.api.nvim_echo({{ "Copied: " .. path, "Directory" }}, false, {})
         end
-    end, { buffer = bufnr, noremap = true, silent = true, desc = "Copy file/folder path" })
+    end
+
+    local function opts(desc)
+        return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+
+    vim.keymap.set('n', 'a', api.fs.create, opts('Create File / Folder'))
+    vim.keymap.set('n', 'o', api.node.open.edit, opts('Open File / Toggle Folder'))
+    vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
+    vim.keymap.set('n', 'yy', api.fs.copy.node, opts('Copy'))
+    vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
+    vim.keymap.set('n', 'dd', api.fs.remove, opts('Delete'))
+
+    vim.keymap.set('n', 'M', function()
+        local node = api.tree.get_node_under_cursor()
+        if node and node.type == "file" and node.name:match("%.md$") then
+            require("plugin-config.markdown").choose_open_mode(node.absolute_path)
+        else
+            api.node.open.edit()
+        end
+    end, opts('Choose markdown open mode'))
+
+    vim.keymap.set('n', 'yyp', copy_abs_path, opts('Copy absolute path'))
+    vim.keymap.set('n', 'Yyp', copy_abs_path, opts('Copy absolute path'))
+    vim.keymap.set('n', 'Y', copy_abs_path, opts('Copy absolute path'))
 end
 
 require('nvim-tree').setup({
