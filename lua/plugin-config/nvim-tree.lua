@@ -22,6 +22,7 @@ local function my_on_attach(bufnr)
     vim.keymap.set('n', 'r', api.fs.rename, opts('Rename'))
     vim.keymap.set('n', 'yy', api.fs.copy.node, opts('Copy'))
     vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
+    vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
     vim.keymap.set('n', 'dd', api.fs.remove, opts('Delete'))
 
     vim.keymap.set('n', 'M', function()
