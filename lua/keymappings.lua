@@ -67,12 +67,7 @@ end
 
 vim.api.nvim_create_user_command("FormatCode", format_code, {})
 
-vim.keymap.set({ "n", "v" }, "<C-A-l>", format_code, { noremap = true, silent = true, desc = "Format code (4 spaces indent)" })
-vim.keymap.set({ "n", "v" }, "<C-A-L>", format_code, { noremap = true, silent = true, desc = "Format code with shift" })
-vim.keymap.set({ "n", "v" }, "<C-M-l>", format_code, { noremap = true, silent = true, desc = "Format code (4 spaces indent)" })
-vim.keymap.set({ "n", "v" }, "<C-M-L>", format_code, { noremap = true, silent = true, desc = "Format code with shift" })
-vim.keymap.set({ "n", "v" }, "<leader>fm", format_code, { noremap = true, silent = true, desc = "Format code (Space+fm)" })
-vim.keymap.set({ "n", "v" }, "<leader>cf", format_code, { noremap = true, silent = true, desc = "Format code (Space+cf)" })
+vim.keymap.set({ "n", "v" }, "<leader>cf", format_code, { noremap = true, silent = true, desc = "Format code (Space+cf, 4 spaces indent)" })
 
 map("n", "gam", ":lua GitAddCommit()<CR>", opt)
 map("n", "gp", ":lua GitPush()<CR>", opt)
