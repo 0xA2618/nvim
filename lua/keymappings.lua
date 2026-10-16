@@ -51,29 +51,14 @@ map("n", "<A-Right>", ":vertical resize +2<CR>", opt)
 map("n", "gd", "<cmd>Lspsaga goto_definition<CR>", opt)
 map("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR><cmd>cclose<CR>", opt)
 local function format_code()
-    vim.bo.shiftwidth = 4
-    vim.bo.tabstop = 4
-    vim.bo.softtabstop = 4
-    vim.bo.expandtab = true
-
-    local has_lsp = false
-    local clients = vim.lsp.get_clients({ bufnr = 0 })
-    for _, client in ipairs(clients) do
-        if client.supports_method("textDocument/formatting") then
-            has_lsp = true
-            break
-        end
-    end
-
-    if has_lsp then
-        vim.lsp.buf.format({
-            async = false,
-            formatting_options = {
-                tabSize = 4,
-                insertSpaces = true,
-            },
-        })
+    local ok, formatter = pcall(require, "plugin-config.formatter")
+    if ok and formatter.format_buffer then
+        formatter.format_buffer()
     else
+        vim.bo.shiftwidth = 4
+        vim.bo.tabstop = 4
+        vim.bo.softtabstop = 4
+        vim.bo.expandtab = true
         local view = vim.fn.winsaveview()
         vim.cmd("normal! gg=G")
         vim.fn.winrestview(view)
