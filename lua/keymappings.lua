@@ -39,7 +39,9 @@ map("t", "<C-`>", "<C-\\><C-n>:OpenCodeToggle<CR>", opt)
 
 map("n", "<leader>th", ":SelectTheme<CR>", opt)
 map("n", "<leader>dl", ":DevLayout<CR>", opt)
-map("n", "tr", ":NvimTreeToggle<CR>", opt)
+map("n", "<C-t>", ":NvimTreeToggle<CR>", opt)
+map("t", "<C-t>", "<C-\\><C-n>:NvimTreeToggle<CR>", opt)
+map("n", "<C-t>r", ":NvimTreeToggle<CR>", opt)
 map("n", "gith", ":Telescope git_commits<CR>", opt)
 
 map("n", "<A-Up>", ":resize +2<CR>", opt)
